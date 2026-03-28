@@ -6,7 +6,7 @@ function raw(row: Record<string, string>, key: string): string {
 }
 
 export async function loadColleges(): Promise<College[]> {
-  const res = await fetch("/data.csv");
+  const res = await fetch(`${import.meta.env.BASE_URL}data.csv`);
   const text = await res.text();
 
   return new Promise((resolve, reject) => {

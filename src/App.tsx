@@ -69,7 +69,7 @@ export default function App() {
     <div className="app">
       <header className="app-header">
         <img
-          src="/study-smarter-logo.webp"
+          src={`${import.meta.env.BASE_URL}study-smarter-logo.webp`}
           alt="Study Smarter"
           className="logo"
         />
