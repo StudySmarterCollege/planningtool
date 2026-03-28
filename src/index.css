@@ -297,21 +297,7 @@ h2 {
   background: #f0f4ff;
 }
 
-/* ---- Card Options Panel ---- */
-.card-options-panel {
-  background: #fff;
-  border-radius: 8px;
-  padding: 1.25rem 1.5rem;
-  margin-top: 1rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-}
-
-.card-options-hint {
-  font-size: 0.8rem;
-  color: #888;
-  margin-bottom: 0.6rem;
-}
-
+/* ---- Card Options (inside sidebar) ---- */
 .card-options-list {
   display: flex;
   flex-direction: column;

@@ -5,7 +5,6 @@ import StudentForm from "./components/StudentForm";
 import CollegeSelector from "./components/CollegeSelector";
 import ComparisonView from "./components/ComparisonView";
 import ExportButton from "./components/ExportButton";
-import CardOptionsPanel from "./components/CardOptionsPanel";
 
 const emptyStudent: Student = {
   name: "",
@@ -90,10 +89,8 @@ export default function App() {
             colleges={colleges}
             selected={selected}
             onSelectionChange={setSelected}
-          />
-          <CardOptionsPanel
-            options={cardOptions}
-            onChange={setCardOptions}
+            cardOptions={cardOptions}
+            onCardOptionsChange={setCardOptions}
           />
         </aside>
 

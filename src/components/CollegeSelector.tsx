@@ -1,21 +1,38 @@
 import { useMemo, useState } from "react";
-import type { College } from "../types";
+import type { College, CardOptions } from "../types";
+
+const sectionDefs: { key: keyof CardOptions; label: string }[] = [
+  { key: "showAdmissions", label: "Admissions Details" },
+  { key: "showGender", label: "Gender Breakdown" },
+  { key: "showEthnicity", label: "Ethnicity Breakdown" },
+  { key: "showFinancialAid", label: "Financial Aid" },
+  { key: "showNetPriceByIncome", label: "Net Price by Income" },
+];
 
 interface Props {
   colleges: College[];
   selected: College[];
   onSelectionChange: (selected: College[]) => void;
+  cardOptions: CardOptions;
+  onCardOptionsChange: (options: CardOptions) => void;
 }
 
 export default function CollegeSelector({
   colleges,
   selected,
   onSelectionChange,
+  cardOptions,
+  onCardOptionsChange,
 }: Props) {
   const [search, setSearch] = useState("");
   const [selectedStates, setSelectedStates] = useState<Set<string>>(new Set());
   const [stateFilterOpen, setStateFilterOpen] = useState(false);
   const [collegeListOpen, setCollegeListOpen] = useState(true);
+  const [cardInfoOpen, setCardInfoOpen] = useState(false);
+
+  function toggleCardOption(key: keyof CardOptions) {
+    onCardOptionsChange({ ...cardOptions, [key]: !cardOptions[key] });
+  }
 
   const allStates = useMemo(() => {
     const states = new Set<string>();
@@ -185,6 +202,43 @@ export default function CollegeSelector({
           {filtered.length === 0 && (
             <p className="list-hint">No colleges match your search.</p>
           )}
+        </div>
+      )}
+
+      {/* Card info sections */}
+      <button
+        className="state-filter-toggle"
+        onClick={() => setCardInfoOpen((o) => !o)}
+      >
+        Card Info Sections
+        <span
+          className={`chevron${cardInfoOpen ? " chevron--open" : ""}`}
+        >
+          ▼
+        </span>
+      </button>
+
+      {cardInfoOpen && (
+        <div className="card-options-list">
+          <label className="card-options-item card-options-item--highlight">
+            <input
+              type="checkbox"
+              checked={cardOptions.hideEmptyStudentData}
+              onChange={() => toggleCardOption("hideEmptyStudentData")}
+            />
+            Hide metrics without student data
+          </label>
+          <hr className="card-options-divider" />
+          {sectionDefs.map((opt) => (
+            <label key={opt.key} className="card-options-item">
+              <input
+                type="checkbox"
+                checked={cardOptions[opt.key]}
+                onChange={() => toggleCardOption(opt.key)}
+              />
+              {opt.label}
+            </label>
+          ))}
         </div>
       )}
     </section>
