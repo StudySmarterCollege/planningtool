@@ -50,6 +50,11 @@ body {
   font-size: 1.6rem;
   font-weight: 700;
   color: #16213e;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* ---- Sidebar toggle ---- */
@@ -400,8 +405,9 @@ h2 {
 /* ---- Comparison View ---- */
 .comparison-view.empty {
   text-align: center;
-  padding: 2rem;
+  padding: 3rem 2rem;
   color: #888;
+  font-size: 1rem;
 }
 
 .card-grid {

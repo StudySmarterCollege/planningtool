@@ -84,10 +84,13 @@ export default function RangeBar({
           </div>
         )}
 
-        {studentVal == null && (
+        {studentVal == null && !hasRange && (
+          <span className="range-bar-no-data">No student or college data</span>
+        )}
+        {studentVal == null && hasRange && (
           <span className="range-bar-no-data">No student data</span>
         )}
-        {!hasRange && (
+        {studentVal != null && !hasRange && (
           <span className="range-bar-no-data">No college data</span>
         )}
       </div>
