@@ -73,7 +73,7 @@ export default function App() {
           alt="Study Smarter"
           className="logo"
         />
-        <h1>College Planning Tool</h1>
+        <div style={{ flex: 1 }} />
         <button
           className="sidebar-toggle"
           onClick={() => setSidebarOpen((o) => !o)}
