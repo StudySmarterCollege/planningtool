@@ -36,6 +36,8 @@ export default function RangeBar({
   formatVal = String,
 }: Props) {
   const hasRange = p25 != null && p75 != null;
+  const p75Pct = p75 != null ? pct(p75, scaleMin, scaleMax) : 0;
+  const hideMax = hasRange && p75Pct > 85;
 
   return (
     <div className="range-bar-row">
@@ -43,7 +45,7 @@ export default function RangeBar({
       <div className="range-bar-track">
         {/* Scale labels */}
         <span className="range-bar-scale-min">{formatVal(scaleMin)}</span>
-        <span className="range-bar-scale-max">{formatVal(scaleMax)}</span>
+        {!hideMax && <span className="range-bar-scale-max">{formatVal(scaleMax)}</span>}
 
         {/* 25th–75th range band */}
         {hasRange && (
