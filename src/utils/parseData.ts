@@ -16,7 +16,8 @@ export async function loadColleges(): Promise<College[]> {
       complete(results) {
         const colleges: College[] = results.data
           .filter((r) => raw(r, "School name") !== "---" && raw(r, "School name") !== "")
-          .map((r) => ({
+          .map((r, i) => ({
+            id: `${i}-${raw(r, "School name").replace(/\s+/g, "-").toLowerCase()}`,
             schoolName: raw(r, "School name"),
             state: raw(r, "State"),
             city: raw(r, "City"),

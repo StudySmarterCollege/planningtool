@@ -226,27 +226,46 @@ export default function CollegeCard({ college, student, cardOptions }: Props) {
         </div>
       )}
 
-      {cardOptions.showEthnicity && (
-        <div className="chart-group">
-          <h4 className="chart-group-title">Ethnicity Breakdown</h4>
-          <div className="stacked-bar">
-            {ethnicitySegments.map((seg) => {
-              const num = parseNum(seg.value);
-              if (num == null || num === 0) return null;
-              return (
-                <div
-                  key={seg.label}
-                  className="stacked-bar-seg"
-                  style={{ flex: num, backgroundColor: seg.color }}
-                  title={`${seg.label}: ${seg.value}`}
-                >
-                  <span>{seg.label} {seg.value}</span>
-                </div>
-              );
-            })}
+      {cardOptions.showEthnicity && (() => {
+        const total = ethnicitySegments.reduce((sum, seg) => sum + (parseNum(seg.value) ?? 0), 0);
+        const MIN_PCT = 10;
+        return (
+          <div className="chart-group">
+            <h4 className="chart-group-title">Ethnicity Breakdown</h4>
+            <div className="stacked-bar">
+              {ethnicitySegments.map((seg) => {
+                const num = parseNum(seg.value);
+                if (num == null || num === 0) return null;
+                const pct = total > 0 ? (num / total) * 100 : 0;
+                return (
+                  <div
+                    key={seg.label}
+                    className="stacked-bar-seg"
+                    style={{ flex: num, backgroundColor: seg.color }}
+                    title={`${seg.label}: ${seg.value}`}
+                  >
+                    {pct >= MIN_PCT && <span>{seg.label} {seg.value}</span>}
+                  </div>
+                );
+              })}
+            </div>
+            <div className="stacked-bar-labels">
+              {ethnicitySegments.map((seg) => {
+                const num = parseNum(seg.value);
+                if (num == null || num === 0) return null;
+                const pct = total > 0 ? (num / total) * 100 : 0;
+                if (pct >= MIN_PCT) return null;
+                return (
+                  <span key={seg.label} className="stacked-bar-ext-label" style={{ color: seg.color }}>
+                    <span className="stacked-bar-ext-dot" style={{ backgroundColor: seg.color }} />
+                    {seg.label} {seg.value}
+                  </span>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {cardOptions.showFinancialAid && (
         <div className="chart-group">

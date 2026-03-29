@@ -44,7 +44,7 @@ export default function CollegeSelector({
     return Array.from(states).sort();
   }, [colleges]);
 
-  const selectedNames = new Set(selected.map((c) => c.schoolName));
+  const selectedIds = new Set(selected.map((c) => c.id));
 
   const filtered = colleges.filter((c) => {
     if (selectedStates.size > 0 && !selectedStates.has(c.state)) {
@@ -59,9 +59,9 @@ export default function CollegeSelector({
   });
 
   function toggle(college: College) {
-    if (selectedNames.has(college.schoolName)) {
+    if (selectedIds.has(college.id)) {
       onSelectionChange(
-        selected.filter((c) => c.schoolName !== college.schoolName)
+        selected.filter((c) => c.id !== college.id)
       );
     } else {
       onSelectionChange([...selected, college]);
@@ -156,7 +156,7 @@ export default function CollegeSelector({
       {selected.length > 0 && (
         <div className="selected-tags">
           {selected.map((c) => (
-            <span key={c.schoolName} className="tag">
+            <span key={c.id} className="tag">
               {c.schoolName}
               <button
                 className="tag-remove"
@@ -184,10 +184,10 @@ export default function CollegeSelector({
       {collegeListOpen && (
         <div className="college-list">
           {filtered.map((c) => (
-            <label key={c.schoolName} className="college-option">
+            <label key={c.id} className="college-option">
               <input
                 type="checkbox"
-                checked={selectedNames.has(c.schoolName)}
+                checked={selectedIds.has(c.id)}
                 onChange={() => toggle(c)}
               />
               <span className="college-name">{c.schoolName}</span>

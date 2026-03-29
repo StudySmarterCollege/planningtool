@@ -21,7 +21,7 @@ export default function ComparisonView({ colleges, student, cardOptions }: Props
       <h2>College Comparison</h2>
       <div className="card-grid">
         {colleges.map((c) => (
-          <CollegeCard key={c.schoolName} college={c} student={student} cardOptions={cardOptions} />
+          <CollegeCard key={c.id} college={c} student={student} cardOptions={cardOptions} />
         ))}
       </div>
     </section>

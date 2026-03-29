@@ -12,6 +12,7 @@ export interface Student {
 }
 
 export interface College {
+  id: string;
   schoolName: string;
   state: string;
   city: string;

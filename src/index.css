@@ -542,6 +542,30 @@ h2 {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
+/* ---- Stacked bar external labels (small segments) ---- */
+.stacked-bar-labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  padding: 0.25rem 1.25rem 0.5rem;
+  font-size: 0.72rem;
+}
+
+.stacked-bar-ext-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.stacked-bar-ext-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
 /* ---- Range bar visualization ---- */
 .range-bar-section {
   padding: 0.75rem 1.25rem;
