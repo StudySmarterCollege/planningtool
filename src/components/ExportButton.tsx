@@ -62,7 +62,7 @@ export default function ExportButton({ colleges, student }: Props) {
 
     // Title
     doc.setFontSize(18);
-    doc.setTextColor(22, 33, 62);
+    doc.setTextColor(56, 84, 123);
     doc.text("College Comparison Report", pageWidth / 2, headerY, { align: "center" });
 
     // Student info
@@ -114,7 +114,7 @@ export default function ExportButton({ colleges, student }: Props) {
       head: [headers],
       body: rows.map((r) => r.map((cell) => cell.text)),
       theme: "grid",
-      headStyles: { fillColor: [22, 33, 62], fontSize: 7, cellPadding: 4 },
+      headStyles: { fillColor: [56, 84, 123], fontSize: 7, cellPadding: 4 },
       bodyStyles: { fontSize: 7, cellPadding: 3 },
       styles: { overflow: "linebreak" },
       columnStyles: { 0: { cellWidth: 100 } },
