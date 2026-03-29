@@ -49,13 +49,13 @@ export default function ExportButton({ colleges, student }: Props) {
     const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "letter" });
     const pageWidth = doc.internal.pageSize.getWidth();
 
-    // Logo
+    // Logo (550x85 original aspect ratio)
     let headerY = 36;
     try {
       const logoDataURL = await loadLogoAsDataURL();
-      const logoH = 36;
-      const logoW = 36;
-      doc.addImage(logoDataURL, "PNG", 40, 12, logoW, logoH);
+      const logoH = 24;
+      const logoW = (550 / 85) * logoH;
+      doc.addImage(logoDataURL, "PNG", 40, 14, logoW, logoH);
     } catch {
       // skip logo if it fails to load
     }
