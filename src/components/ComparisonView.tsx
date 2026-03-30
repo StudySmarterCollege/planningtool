@@ -5,9 +5,10 @@ interface Props {
   colleges: College[];
   student: Student;
   cardOptions: CardOptions;
+  cardRefs?: React.MutableRefObject<Map<string, HTMLDivElement>>;
 }
 
-export default function ComparisonView({ colleges, student, cardOptions }: Props) {
+export default function ComparisonView({ colleges, student, cardOptions, cardRefs }: Props) {
   if (colleges.length === 0) {
     return (
       <section className="comparison-view empty">
@@ -21,7 +22,19 @@ export default function ComparisonView({ colleges, student, cardOptions }: Props
       <h2>College Comparison</h2>
       <div className="card-grid">
         {colleges.map((c) => (
-          <CollegeCard key={c.id} college={c} student={student} cardOptions={cardOptions} />
+          <div
+            key={c.id}
+            ref={(el) => {
+              if (!cardRefs) return;
+              if (el) {
+                cardRefs.current.set(c.id, el);
+              } else {
+                cardRefs.current.delete(c.id);
+              }
+            }}
+          >
+            <CollegeCard college={c} student={student} cardOptions={cardOptions} />
+          </div>
         ))}
       </div>
     </section>

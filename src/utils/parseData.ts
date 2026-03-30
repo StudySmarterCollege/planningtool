@@ -79,6 +79,16 @@ export async function loadColleges(): Promise<College[]> {
             percentPacificIslander: raw(r, "Percent Native Hawaiian or Pacific Islander"),
             percentOther: raw(r, "Percent Other"),
 
+            // GPA distribution
+            gpaDistAbove4: raw(r, "Percent of students with GPA (4.0+)"),
+            gpaDist375_399: raw(r, "Percent of students with GPA (3.75-3.99)"),
+            gpaDist350_374: raw(r, "Percent of students with GPA (3.50-3.74)"),
+            gpaDist325_349: raw(r, "Percent of students with GPA (3.25-3.49)"),
+            gpaDist300_324: raw(r, "Percent of students with GPA (3.00-3.24)"),
+            gpaDist250_299: raw(r, "Percent of students with GPA (2.50-2.99)"),
+            gpaDist200_249: raw(r, "Percent of students with GPA (2.00-2.49)"),
+            gpaDistBelow1: raw(r, "Percent of students with GPA (Below 1.00)"),
+
             // Test submission rates
             percentSubmittingSAT: raw(r, "Percentage of enrolled freshmen submitting SAT scores"),
             percentSubmittingACT: raw(r, "Percentage of enrolled freshmen submitting ACT scores"),

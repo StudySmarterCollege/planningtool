@@ -385,9 +385,16 @@ h2 {
 }
 
 /* ---- Export button ---- */
+.export-btn-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
 .export-btn {
   display: inline-block;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0;
   padding: 0.6rem 1.4rem;
   background: #F4D065;
   color: #38547B;
@@ -569,6 +576,115 @@ h2 {
   height: 8px;
   border-radius: 50%;
   flex-shrink: 0;
+}
+
+/* ---- Donut chart (ethnicity) ---- */
+.donut-chart-wrapper {
+  padding: 0.75rem 1.25rem;
+}
+
+.donut-chart {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.donut-chart-svg {
+  flex-shrink: 0;
+}
+
+.donut-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.donut-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+}
+
+.donut-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.donut-legend-label {
+  color: #555;
+}
+
+.donut-legend-value {
+  font-weight: 600;
+  color: #383838;
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- GPA + Acceptance side-by-side row ---- */
+.gpa-acceptance-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.25rem 1.25rem 0.75rem;
+}
+
+/* ---- GPA Distribution vertical bar chart ---- */
+.gpa-dist {
+  flex: 1;
+  min-width: 0;
+}
+
+.gpa-dist-title {
+  display: block;
+  font-size: 0.75rem;
+  color: #777;
+  margin-bottom: 0.25rem;
+}
+
+.gpa-dist--empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.gpa-dist-student-gpa {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #38547B;
+}
+
+.gpa-dist-no-data {
+  font-size: 0.78rem;
+  color: #999;
+  font-style: italic;
+  margin-top: 0.25rem;
+}
+
+/* ---- Acceptance Rate ring ---- */
+.acceptance-ring {
+  width: 180px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.acceptance-ring-title {
+  display: block;
+  font-size: 0.75rem;
+  color: #777;
+  margin-bottom: 0.25rem;
+}
+
+.acceptance-ring-svg {
+  max-width: 160px;
 }
 
 /* ---- Range bar visualization ---- */

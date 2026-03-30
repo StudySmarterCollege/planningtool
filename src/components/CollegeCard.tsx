@@ -1,6 +1,9 @@
 import type { College, Student, CardOptions } from "../types";
-import { compareScore, compareGPA, parseNum } from "../utils/compare";
+import { compareScore, parseNum } from "../utils/compare";
 import RangeBar from "./RangeBar";
+import DonutChart from "./DonutChart";
+import GPADistribution from "./GPADistribution";
+import AcceptanceRing from "./AcceptanceRing";
 
 interface Props {
   college: College;
@@ -49,20 +52,20 @@ export default function CollegeCard({ college, student, cardOptions }: Props) {
   }[] = [
     { label: "ACT Composite", studentVal: student.actComposite, p25: c.actComposite25, p50: c.actComposite50, p75: c.actComposite75 },
     { label: "ACT English", studentVal: student.actEnglish, p25: c.actEnglish25, p50: c.actEnglish50, p75: c.actEnglish75 },
-    { label: "ACT Reading", studentVal: student.actReading, p25: c.actReading25, p50: c.actReading50, p75: c.actReading75 },
     { label: "ACT Math", studentVal: student.actMath, p25: c.actMath25, p50: c.actMath50, p75: c.actMath75 },
-    { label: "ACT Science", studentVal: student.actScience, p25: c.actScience25, p50: c.actScience50, p75: c.actScience75 },
   ];
 
-  const avgGPA = parseNum(c.averageGPA);
-
   const hide = cardOptions.hideEmptyStudentData;
-  const visibleSatRows = hide
-    ? satRows.filter((r) => r.studentVal != null)
-    : satRows;
-  const visibleActRows = hide
-    ? actRows.filter((r) => r.studentVal != null)
-    : actRows;
+  const hasCollegeScoreData = (r: { p25: string; p50: string; p75: string }) =>
+    r.p25 !== "---" || r.p50 !== "---" || r.p75 !== "---";
+  const hasAnyData = (r: { studentVal: number | null; p25: string; p50: string; p75: string }) =>
+    r.studentVal != null || hasCollegeScoreData(r);
+  const visibleSatRows = satRows
+    .filter(hasAnyData)
+    .filter((r) => !hide || r.studentVal != null);
+  const visibleActRows = actRows
+    .filter(hasAnyData)
+    .filter((r) => !hide || r.studentVal != null);
 
   const ethnicitySegments: { label: string; value: string; color: string }[] = [
     { label: "White", value: c.percentWhite, color: "#60a5fa" },
@@ -85,10 +88,6 @@ export default function CollegeCard({ college, student, cardOptions }: Props) {
       </div>
 
       <div className="card-stats">
-        <div className="stat">
-          <span className="stat-label">Acceptance</span>
-          <span className="stat-value">{fmt(c.acceptanceRate)}</span>
-        </div>
         {c.hasED === "Yes" && c.edAdmitRate !== "---" && (
           <div className="stat">
             <span className="stat-label">ED Rate</span>
@@ -107,6 +106,26 @@ export default function CollegeCard({ college, student, cardOptions }: Props) {
             <span className="stat-value">{c.rdAdmitRate}</span>
           </div>
         )}
+        <div className="stat">
+          <span className="stat-label">In-State Tuition</span>
+          <span className="stat-value">{fmt(c.inStateTuition)}</span>
+        </div>
+        <div className="stat">
+          <span className="stat-label">Out-of-State</span>
+          <span className="stat-value">{fmt(c.outStateTuition)}</span>
+        </div>
+        <div className="stat">
+          <span className="stat-label">4-Yr Grad Rate</span>
+          <span className="stat-value">{fmt(c.graduationRate4yr)}</span>
+        </div>
+        <div className="stat">
+          <span className="stat-label">Retention</span>
+          <span className="stat-value">{fmt(c.retentionRate)}</span>
+        </div>
+        <div className="stat">
+          <span className="stat-label">Enrollment</span>
+          <span className="stat-value">{fmt(c.enrollmentFullTime)}</span>
+        </div>
       </div>
 
       {cardOptions.showAdmissions && (
@@ -126,18 +145,9 @@ export default function CollegeCard({ college, student, cardOptions }: Props) {
       {!(hide && student.gpa == null) && (
         <div className="chart-group">
           <h4 className="chart-group-title">GPA</h4>
-          <div className="range-bar-section">
-            <RangeBar
-              label="GPA"
-              studentVal={student.gpa}
-              p25={avgGPA != null ? Math.max(0, avgGPA - 0.3) : null}
-              p50={avgGPA}
-              p75={avgGPA != null ? Math.min(5.0, avgGPA + 0.2) : null}
-              scaleMin={0}
-              scaleMax={5.0}
-              status={compareGPA(student.gpa, c.averageGPA)}
-              formatVal={(n) => n.toFixed(1)}
-            />
+          <div className="gpa-acceptance-row">
+            <GPADistribution college={c} studentGPA={student.gpa} studentName={student.name} />
+            <AcceptanceRing acceptanceRate={c.acceptanceRate} />
           </div>
         </div>
       )}
@@ -184,88 +194,45 @@ export default function CollegeCard({ college, student, cardOptions }: Props) {
         </div>
       )}
 
+      {(visibleSatRows.some(hasCollegeScoreData) || visibleActRows.some(hasCollegeScoreData)) && (
       <div className="card-legend">
         <span className="legend-item status-green">At/above 75th</span>
         <span className="legend-item status-yellow">25th–75th</span>
         <span className="legend-item status-red">Below 25th</span>
         <span className="legend-item status-gray">N/A</span>
       </div>
-
-      {cardOptions.showGender && (
-        <div className="chart-group">
-          <h4 className="chart-group-title">Gender Breakdown</h4>
-          <div className="stacked-bar">
-            {parseNum(c.percentWomen) != null && parseNum(c.percentWomen)! > 0 && (
-              <div
-                className="stacked-bar-seg"
-                style={{ flex: parseNum(c.percentWomen)!, backgroundColor: "#818cf8" }}
-                title={`Women: ${c.percentWomen}`}
-              >
-                <span>Women {c.percentWomen}</span>
-              </div>
-            )}
-            {parseNum(c.percentMen) != null && parseNum(c.percentMen)! > 0 && (
-              <div
-                className="stacked-bar-seg"
-                style={{ flex: parseNum(c.percentMen)!, backgroundColor: "#38bdf8" }}
-                title={`Men: ${c.percentMen}`}
-              >
-                <span>Men {c.percentMen}</span>
-              </div>
-            )}
-            {parseNum(c.percentNonBinary) != null && parseNum(c.percentNonBinary)! > 0 && (
-              <div
-                className="stacked-bar-seg"
-                style={{ flex: parseNum(c.percentNonBinary)!, backgroundColor: "#a78bfa" }}
-                title={`Non-binary: ${c.percentNonBinary}`}
-              >
-                <span>NB {c.percentNonBinary}</span>
-              </div>
-            )}
-          </div>
-        </div>
       )}
 
-      {cardOptions.showEthnicity && (() => {
-        const total = ethnicitySegments.reduce((sum, seg) => sum + (parseNum(seg.value) ?? 0), 0);
-        const MIN_PCT = 10;
-        return (
-          <div className="chart-group">
-            <h4 className="chart-group-title">Ethnicity Breakdown</h4>
-            <div className="stacked-bar">
-              {ethnicitySegments.map((seg) => {
-                const num = parseNum(seg.value);
-                if (num == null || num === 0) return null;
-                const pct = total > 0 ? (num / total) * 100 : 0;
-                return (
-                  <div
-                    key={seg.label}
-                    className="stacked-bar-seg"
-                    style={{ flex: num, backgroundColor: seg.color }}
-                    title={`${seg.label}: ${seg.value}`}
-                  >
-                    {pct >= MIN_PCT && <span>{seg.label} {seg.value}</span>}
-                  </div>
-                );
-              })}
+      {(cardOptions.showGender || cardOptions.showEthnicity) && (
+        <div className="chart-group demographics-row">
+          {cardOptions.showGender && (
+            <div className="demographics-col">
+              <h4 className="chart-group-title">Gender Breakdown</h4>
+              <div className="donut-chart-wrapper">
+                <DonutChart
+                  segments={[
+                    { label: "Women", value: parseNum(c.percentWomen) ?? 0, color: "#818cf8" },
+                    { label: "Men", value: parseNum(c.percentMen) ?? 0, color: "#38bdf8" },
+                    { label: "Non-binary", value: parseNum(c.percentNonBinary) ?? 0, color: "#a78bfa" },
+                  ].filter((s) => s.value > 0)}
+                />
+              </div>
             </div>
-            <div className="stacked-bar-labels">
-              {ethnicitySegments.map((seg) => {
-                const num = parseNum(seg.value);
-                if (num == null || num === 0) return null;
-                const pct = total > 0 ? (num / total) * 100 : 0;
-                if (pct >= MIN_PCT) return null;
-                return (
-                  <span key={seg.label} className="stacked-bar-ext-label" style={{ color: seg.color }}>
-                    <span className="stacked-bar-ext-dot" style={{ backgroundColor: seg.color }} />
-                    {seg.label} {seg.value}
-                  </span>
-                );
-              })}
+          )}
+          {cardOptions.showEthnicity && (
+            <div className="demographics-col">
+              <h4 className="chart-group-title">Ethnicity Breakdown</h4>
+              <div className="donut-chart-wrapper">
+                <DonutChart
+                  segments={ethnicitySegments
+                    .filter((s) => parseNum(s.value) != null && parseNum(s.value)! > 0)
+                    .map((s) => ({ label: s.label, value: parseNum(s.value)!, color: s.color }))}
+                />
+              </div>
             </div>
-          </div>
-        );
-      })()}
+          )}
+        </div>
+      )}
 
       {cardOptions.showFinancialAid && (
         <div className="chart-group">
@@ -296,28 +263,6 @@ export default function CollegeCard({ college, student, cardOptions }: Props) {
         </div>
       )}
 
-      <div className="card-footer">
-        <div className="stat">
-          <span className="stat-label">In-State Tuition</span>
-          <span className="stat-value">{fmt(c.inStateTuition)}</span>
-        </div>
-        <div className="stat">
-          <span className="stat-label">Out-of-State</span>
-          <span className="stat-value">{fmt(c.outStateTuition)}</span>
-        </div>
-        <div className="stat">
-          <span className="stat-label">4-Yr Grad Rate</span>
-          <span className="stat-value">{fmt(c.graduationRate4yr)}</span>
-        </div>
-        <div className="stat">
-          <span className="stat-label">Retention</span>
-          <span className="stat-value">{fmt(c.retentionRate)}</span>
-        </div>
-        <div className="stat">
-          <span className="stat-label">Enrollment</span>
-          <span className="stat-value">{fmt(c.enrollmentFullTime)}</span>
-        </div>
-      </div>
     </div>
   );
 }

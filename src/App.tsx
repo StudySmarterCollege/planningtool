@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Student, College, CardOptions } from "./types";
 import { loadColleges } from "./utils/parseData";
 import StudentForm from "./components/StudentForm";
 import CollegeSelector from "./components/CollegeSelector";
 import ComparisonView from "./components/ComparisonView";
 import ExportButton from "./components/ExportButton";
+import ExportCardsButton from "./components/ExportCardsButton";
 
 const emptyStudent: Student = {
   name: "",
@@ -36,6 +37,7 @@ export default function App() {
   const [selected, setSelected] = useState<College[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [cardOptions, setCardOptions] = useState<CardOptions>(defaultCardOptions);
+  const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
   useEffect(() => {
     loadColleges()
@@ -96,8 +98,11 @@ export default function App() {
 
         <main className="main-content">
           <StudentForm student={student} onChange={setStudent} />
-          <ExportButton colleges={selected} student={student} />
-          <ComparisonView colleges={selected} student={student} cardOptions={cardOptions} />
+          <div className="export-btn-row">
+            <ExportButton colleges={selected} student={student} />
+            <ExportCardsButton colleges={selected} student={student} cardRefs={cardRefs} />
+          </div>
+          <ComparisonView colleges={selected} student={student} cardOptions={cardOptions} cardRefs={cardRefs} />
         </main>
       </div>
     </div>

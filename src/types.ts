@@ -74,6 +74,16 @@ export interface College {
   percentPacificIslander: string;
   percentOther: string;
 
+  // GPA distribution
+  gpaDistAbove4: string;
+  gpaDist375_399: string;
+  gpaDist350_374: string;
+  gpaDist325_349: string;
+  gpaDist300_324: string;
+  gpaDist250_299: string;
+  gpaDist200_249: string;
+  gpaDistBelow1: string;
+
   // Test submission rates
   percentSubmittingSAT: string;
   percentSubmittingACT: string;
