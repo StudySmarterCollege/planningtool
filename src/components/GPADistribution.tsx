@@ -44,13 +44,13 @@ export default function GPADistribution({ college, studentGPA, studentName }: Pr
 
   const maxVal = Math.max(...rows.map((r) => r.value ?? 0), 1);
 
-  // SVG layout (compact)
-  const W = 220;
-  const H = 100;
-  const padLeft = 3;
-  const padRight = 3;
-  const padTop = 12;
-  const padBottom = 20;
+  // SVG layout — wide aspect ratio to fit ~800×200 rendered space
+  const W = 400;
+  const H = 110;
+  const padLeft = 5;
+  const padRight = 5;
+  const padTop = 10;
+  const padBottom = 28;
   const plotW = W - padLeft - padRight;
   const plotH = H - padTop - padBottom;
 
@@ -112,9 +112,9 @@ export default function GPADistribution({ college, studentGPA, studentName }: Pr
               {val > 0 && (
                 <text
                   x={x + barW / 2}
-                  y={y - 3}
+                  y={y - 4}
                   textAnchor="middle"
-                  fontSize={3.5}
+                  fontSize={6}
                   fontWeight={600}
                   fill="#383838"
                 >
@@ -124,9 +124,9 @@ export default function GPADistribution({ college, studentGPA, studentName }: Pr
               {/* X-axis label */}
               <text
                 x={x + barW / 2}
-                y={padTop + plotH + 7}
+                y={padTop + plotH + 10}
                 textAnchor="middle"
-                fontSize={3.5}
+                fontSize={6}
                 fill="#555"
                 fontWeight={500}
               >
@@ -151,10 +151,10 @@ export default function GPADistribution({ college, studentGPA, studentName }: Pr
           const label = studentName
             ? `${studentName}: ${studentGPA!.toFixed(2)}`
             : studentGPA!.toFixed(2);
-          const pillH = 8;
-          const pillY = padTop + plotH + 11;
+          const pillH = 10;
+          const pillY = padTop + plotH + 13;
           const pillCY = pillY + pillH / 2;
-          const pillW = label.length * 2.4 + 5;
+          const pillW = label.length * 4 + 8;
           return (
             <g>
               <line
@@ -179,7 +179,7 @@ export default function GPADistribution({ college, studentGPA, studentName }: Pr
                 y={pillCY}
                 textAnchor="middle"
                 dominantBaseline="central"
-                fontSize={3.5}
+                fontSize={6}
                 fontWeight={700}
                 fill="#38547B"
               >

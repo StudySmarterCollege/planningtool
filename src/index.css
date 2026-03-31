@@ -649,6 +649,10 @@ h2 {
   min-width: 0;
 }
 
+.gpa-dist svg {
+  max-height: 200px;
+}
+
 
 .gpa-dist-title {
   display: block;
@@ -681,7 +685,7 @@ h2 {
 
 /* ---- Acceptance Rate ring ---- */
 .acceptance-ring {
-  width: 120px;
+  width: 160px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -696,7 +700,7 @@ h2 {
 }
 
 .acceptance-ring-svg {
-  max-width: 110px;
+  max-width: 140px;
 }
 
 /* ---- SAT + ACT side-by-side row ---- */
