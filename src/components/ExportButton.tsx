@@ -1,11 +1,12 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import type { College, Student, CompareStatus } from "../types";
-import { compareScore, compareGPA } from "../utils/compare";
+import type { College, Student, CardOptions, CompareStatus } from "../types";
+import { compareScore, compareGPA, parseNum } from "../utils/compare";
 
 interface Props {
   colleges: College[];
   student: Student;
+  cardOptions: CardOptions;
 }
 
 function fmt(val: string): string {
@@ -44,7 +45,7 @@ function loadLogoAsDataURL(): Promise<string> {
   });
 }
 
-export default function ExportButton({ colleges, student }: Props) {
+export default function ExportButton({ colleges, student, cardOptions }: Props) {
   async function exportPDF() {
     const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "letter" });
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -77,8 +78,11 @@ export default function ExportButton({ colleges, student }: Props) {
       doc.text(studentParts.join("  |  "), pageWidth / 2, 52, { align: "center" });
     }
 
-    // Build rows
-    const headers: string[] = ["College", "Location", "Accept %", "In-State", "Out-of-State", "GPA", "SAT", "ACT"];
+    // Build headers and rows dynamically based on cardOptions
+    const headers: string[] = ["College", "Location", "Accept %", "Tuition (In/Out)", "GPA", "SAT", "ACT"];
+    if (cardOptions.showAdmissions) headers.push("ED/EA");
+    if (cardOptions.showGender) headers.push("Gender");
+    if (cardOptions.showEthnicity) headers.push("Ethnicity");
 
     const label = student.name || "You";
 
@@ -99,12 +103,42 @@ export default function ExportButton({ colleges, student }: Props) {
         { text: c.schoolName },
         { text: `${fmt(c.city)}, ${fmt(c.state)}` },
         { text: fmt(c.acceptanceRate) },
-        { text: fmt(c.inStateTuition) },
-        { text: fmt(c.outStateTuition) },
+        { text: `${fmt(c.inStateTuition)} / ${fmt(c.outStateTuition)}` },
         { text: gpaLines.join("\n"), status: gpaStatus },
         { text: satLines.join("\n"), status: satStatus },
         { text: actLines.join("\n"), status: actStatus },
       ];
+
+      if (cardOptions.showAdmissions) {
+        const parts: string[] = [];
+        if (c.hasED === "Yes") parts.push("ED");
+        if (c.hasEA === "Yes") parts.push("EA");
+        cells.push({ text: parts.length > 0 ? parts.join(", ") : "No" });
+      }
+
+      if (cardOptions.showGender) {
+        const genderParts: string[] = [];
+        const w = parseNum(c.percentWomen);
+        const m = parseNum(c.percentMen);
+        if (w != null) genderParts.push(`W: ${w}%`);
+        if (m != null) genderParts.push(`M: ${m}%`);
+        cells.push({ text: genderParts.length > 0 ? genderParts.join("\n") : "N/A" });
+      }
+
+      if (cardOptions.showEthnicity) {
+        const ethParts: string[] = [];
+        const eth: [string, string][] = [
+          ["White", c.percentWhite],
+          ["Hisp.", c.percentHispanicLatino],
+          ["Black", c.percentBlack],
+          ["Asian", c.percentAsian],
+        ];
+        for (const [lbl, val] of eth) {
+          const n = parseNum(val);
+          if (n != null && n > 0) ethParts.push(`${lbl}: ${n}%`);
+        }
+        cells.push({ text: ethParts.length > 0 ? ethParts.join("\n") : "N/A" });
+      }
 
       return cells;
     });

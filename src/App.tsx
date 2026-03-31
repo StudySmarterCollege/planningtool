@@ -99,7 +99,7 @@ export default function App() {
         <main className="main-content">
           <StudentForm student={student} onChange={setStudent} />
           <div className="export-btn-row">
-            <ExportButton colleges={selected} student={student} />
+            <ExportButton colleges={selected} student={student} cardOptions={cardOptions} />
             <ExportCardsButton colleges={selected} student={student} cardRefs={cardRefs} />
           </div>
           <ComparisonView colleges={selected} student={student} cardOptions={cardOptions} cardRefs={cardRefs} />

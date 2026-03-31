@@ -114,3 +114,12 @@ export interface CardOptions {
 }
 
 export type CompareStatus = "green" | "yellow" | "red" | "gray";
+
+export interface ScoreScales {
+  satTotal: { min: number; max: number };
+  satReading: { min: number; max: number };
+  satMath: { min: number; max: number };
+  actComposite: { min: number; max: number };
+  actEnglish: { min: number; max: number };
+  actMath: { min: number; max: number };
+}

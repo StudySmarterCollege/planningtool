@@ -1,4 +1,4 @@
-import type { College, Student, CardOptions } from "../types";
+import type { College, Student, CardOptions, ScoreScales } from "../types";
 import { compareScore, parseNum } from "../utils/compare";
 import RangeBar from "./RangeBar";
 import DonutChart from "./DonutChart";
@@ -9,6 +9,7 @@ interface Props {
   college: College;
   student: Student;
   cardOptions: CardOptions;
+  scales: ScoreScales;
 }
 
 function fmt(val: string): string {
@@ -26,7 +27,7 @@ function StatRow({ label, value }: { label: string; value: string }) {
 }
 
 
-export default function CollegeCard({ college, student, cardOptions }: Props) {
+export default function CollegeCard({ college, student, cardOptions, scales }: Props) {
   const c = college;
 
   const satRows: {
@@ -38,9 +39,9 @@ export default function CollegeCard({ college, student, cardOptions }: Props) {
     scaleMin: number;
     scaleMax: number;
   }[] = [
-    { label: "SAT Total", studentVal: student.satTotal, p25: c.satComposite25, p50: c.satComposite50, p75: c.satComposite75, scaleMin: 400, scaleMax: 1600 },
-    { label: "SAT Reading", studentVal: student.satReading, p25: c.satReading25, p50: c.satReading50, p75: c.satReading75, scaleMin: 200, scaleMax: 800 },
-    { label: "SAT Math", studentVal: student.satMath, p25: c.satMath25, p50: c.satMath50, p75: c.satMath75, scaleMin: 200, scaleMax: 800 },
+    { label: "SAT Total", studentVal: student.satTotal, p25: c.satComposite25, p50: c.satComposite50, p75: c.satComposite75, scaleMin: scales.satTotal.min, scaleMax: scales.satTotal.max },
+    { label: "SAT Reading", studentVal: student.satReading, p25: c.satReading25, p50: c.satReading50, p75: c.satReading75, scaleMin: scales.satReading.min, scaleMax: scales.satReading.max },
+    { label: "SAT Math", studentVal: student.satMath, p25: c.satMath25, p50: c.satMath50, p75: c.satMath75, scaleMin: scales.satMath.min, scaleMax: scales.satMath.max },
   ];
 
   const actRows: {
@@ -49,10 +50,12 @@ export default function CollegeCard({ college, student, cardOptions }: Props) {
     p25: string;
     p50: string;
     p75: string;
+    scaleMin: number;
+    scaleMax: number;
   }[] = [
-    { label: "ACT Composite", studentVal: student.actComposite, p25: c.actComposite25, p50: c.actComposite50, p75: c.actComposite75 },
-    { label: "ACT English", studentVal: student.actEnglish, p25: c.actEnglish25, p50: c.actEnglish50, p75: c.actEnglish75 },
-    { label: "ACT Math", studentVal: student.actMath, p25: c.actMath25, p50: c.actMath50, p75: c.actMath75 },
+    { label: "ACT Composite", studentVal: student.actComposite, p25: c.actComposite25, p50: c.actComposite50, p75: c.actComposite75, scaleMin: scales.actComposite.min, scaleMax: scales.actComposite.max },
+    { label: "ACT English", studentVal: student.actEnglish, p25: c.actEnglish25, p50: c.actEnglish50, p75: c.actEnglish75, scaleMin: scales.actEnglish.min, scaleMax: scales.actEnglish.max },
+    { label: "ACT Math", studentVal: student.actMath, p25: c.actMath25, p50: c.actMath50, p75: c.actMath75, scaleMin: scales.actMath.min, scaleMax: scales.actMath.max },
   ];
 
   const hide = cardOptions.hideEmptyStudentData;
@@ -152,45 +155,49 @@ export default function CollegeCard({ college, student, cardOptions }: Props) {
         </div>
       )}
 
-      {visibleSatRows.length > 0 && (
-        <div className="chart-group">
-          <h4 className="chart-group-title">SAT Scores</h4>
-          <div className="range-bar-section">
-            {visibleSatRows.map((r) => (
-              <RangeBar
-                key={r.label}
-                label={r.label}
-                studentVal={r.studentVal}
-                p25={parseNum(r.p25)}
-                p50={parseNum(r.p50)}
-                p75={parseNum(r.p75)}
-                scaleMin={r.scaleMin}
-                scaleMax={r.scaleMax}
-                status={compareScore(r.studentVal, r.p25, r.p75)}
-              />
-            ))}
-          </div>
-        </div>
-      )}
+      {(visibleSatRows.length > 0 || visibleActRows.length > 0) && (
+        <div className="chart-group scores-row">
+          {visibleSatRows.length > 0 && (
+            <div className="scores-col">
+              <h4 className="chart-group-title">SAT Scores</h4>
+              <div className="range-bar-section">
+                {visibleSatRows.map((r) => (
+                  <RangeBar
+                    key={r.label}
+                    label={r.label}
+                    studentVal={r.studentVal}
+                    p25={parseNum(r.p25)}
+                    p50={parseNum(r.p50)}
+                    p75={parseNum(r.p75)}
+                    scaleMin={r.scaleMin}
+                    scaleMax={r.scaleMax}
+                    status={compareScore(r.studentVal, r.p25, r.p75)}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
 
-      {visibleActRows.length > 0 && (
-        <div className="chart-group">
-          <h4 className="chart-group-title">ACT Scores</h4>
-          <div className="range-bar-section">
-            {visibleActRows.map((r) => (
-              <RangeBar
-                key={r.label}
-                label={r.label}
-                studentVal={r.studentVal}
-                p25={parseNum(r.p25)}
-                p50={parseNum(r.p50)}
-                p75={parseNum(r.p75)}
-                scaleMin={1}
-                scaleMax={36}
-                status={compareScore(r.studentVal, r.p25, r.p75)}
-              />
-            ))}
-          </div>
+          {visibleActRows.length > 0 && (
+            <div className="scores-col">
+              <h4 className="chart-group-title">ACT Scores</h4>
+              <div className="range-bar-section">
+                {visibleActRows.map((r) => (
+                  <RangeBar
+                    key={r.label}
+                    label={r.label}
+                    studentVal={r.studentVal}
+                    p25={parseNum(r.p25)}
+                    p50={parseNum(r.p50)}
+                    p75={parseNum(r.p75)}
+                    scaleMin={r.scaleMin}
+                    scaleMax={r.scaleMax}
+                    status={compareScore(r.studentVal, r.p25, r.p75)}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 

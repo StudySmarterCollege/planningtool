@@ -45,7 +45,7 @@ export default function GPADistribution({ college, studentGPA, studentName }: Pr
   const maxVal = Math.max(...rows.map((r) => r.value ?? 0), 1);
 
   // SVG layout (compact)
-  const W = 160;
+  const W = 220;
   const H = 100;
   const padLeft = 3;
   const padRight = 3;
