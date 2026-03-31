@@ -75,14 +75,7 @@ export default function App() {
           alt="Study Smarter"
           className="logo"
         />
-        <div style={{ flex: 1 }} />
-        <button
-          className="sidebar-toggle"
-          onClick={() => setSidebarOpen((o) => !o)}
-          aria-label={sidebarOpen ? "Close sidebar" : "Open sidebar"}
-        >
-          {sidebarOpen ? "\u2715" : "\u2630"}
-        </button>
+        <h1 className="page-title">Working College List Data</h1>
       </header>
 
       <div className="app-layout">
@@ -93,10 +86,20 @@ export default function App() {
             onSelectionChange={setSelected}
             cardOptions={cardOptions}
             onCardOptionsChange={setCardOptions}
+            onClose={() => setSidebarOpen(false)}
           />
         </aside>
 
         <main className="main-content">
+          {!sidebarOpen && (
+            <button
+              className="sidebar-toggle sidebar-open-btn"
+              onClick={() => setSidebarOpen(true)}
+              aria-label="Open sidebar"
+            >
+              {"\u2630"}
+            </button>
+          )}
           <StudentForm student={student} onChange={setStudent} />
           <div className="export-btn-row">
             <ExportButton colleges={selected} student={student} cardOptions={cardOptions} />

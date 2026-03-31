@@ -15,6 +15,7 @@ interface Props {
   onSelectionChange: (selected: College[]) => void;
   cardOptions: CardOptions;
   onCardOptionsChange: (options: CardOptions) => void;
+  onClose?: () => void;
 }
 
 export default function CollegeSelector({
@@ -23,6 +24,7 @@ export default function CollegeSelector({
   onSelectionChange,
   cardOptions,
   onCardOptionsChange,
+  onClose,
 }: Props) {
   const [search, setSearch] = useState("");
   const [selectedStates, setSelectedStates] = useState<Set<string>>(new Set());
@@ -86,7 +88,14 @@ export default function CollegeSelector({
 
   return (
     <section className="college-selector">
-      <h2>Select Colleges</h2>
+      <div className="selector-header">
+        {onClose && (
+          <button className="sidebar-toggle" onClick={onClose} aria-label="Close sidebar">
+            {"\u2715"}
+          </button>
+        )}
+        <h2>Select Colleges</h2>
+      </div>
       <input
         type="text"
         className="search-input"
