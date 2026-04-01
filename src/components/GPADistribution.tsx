@@ -157,22 +157,48 @@ export default function GPADistribution({ college, studentGPA, studentName }: Pr
           const pillW = label.length * 4 + 8;
           return (
             <g>
+              <defs>
+                <filter id="gpa-glow">
+                  <feGaussianBlur stdDeviation="2" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+              {/* Glow line behind */}
               <line
                 x1={studentX}
                 y1={padTop - 2}
                 x2={studentX}
                 y2={padTop + plotH}
-                stroke="#F4D065"
-                strokeWidth={1.2}
-                strokeDasharray="3 2"
+                stroke="#ff3d00"
+                strokeWidth={3}
+                opacity={0.3}
               />
+              {/* Main student line */}
+              <line
+                x1={studentX}
+                y1={padTop - 2}
+                x2={studentX}
+                y2={padTop + plotH}
+                stroke="#ff3d00"
+                strokeWidth={1.8}
+                filter="url(#gpa-glow)"
+              />
+              {/* Top diamond marker */}
+              <polygon
+                points={`${studentX},${padTop - 5} ${studentX + 3},${padTop - 2} ${studentX},${padTop + 1} ${studentX - 3},${padTop - 2}`}
+                fill="#ff3d00"
+              />
+              {/* Pill background */}
               <rect
                 x={studentX - pillW / 2}
                 y={pillY}
                 width={pillW}
                 height={pillH}
-                rx={2}
-                fill="#F4D065"
+                rx={3}
+                fill="#ff3d00"
               />
               <text
                 x={studentX}
@@ -181,7 +207,7 @@ export default function GPADistribution({ college, studentGPA, studentName }: Pr
                 dominantBaseline="central"
                 fontSize={6}
                 fontWeight={700}
-                fill="#38547B"
+                fill="#ffffff"
               >
                 {label}
               </text>
