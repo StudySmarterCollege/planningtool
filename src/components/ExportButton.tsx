@@ -150,7 +150,7 @@ export default function ExportButton({ colleges, student, cardOptions }: Props) 
       theme: "grid",
       headStyles: { fillColor: [56, 84, 123], fontSize: 7, cellPadding: 4 },
       bodyStyles: { fontSize: 7, cellPadding: 3 },
-      styles: { overflow: "linebreak" },
+      styles: { overflow: "linebreak", valign: "middle" },
       columnStyles: { 0: { cellWidth: 100 } },
       didParseCell(data) {
         if (data.section === "body") {
