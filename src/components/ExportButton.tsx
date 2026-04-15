@@ -2,6 +2,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import type { College, Student, CardOptions, CompareStatus } from "../types";
 import { compareScore, compareGPA, parseNum } from "../utils/compare";
+import { loadDejaVuSansBase64 } from "../utils/loadFont";
 
 interface Props {
   colleges: College[];
@@ -48,6 +49,10 @@ function loadLogoAsDataURL(): Promise<string> {
 export default function ExportButton({ colleges, student, cardOptions }: Props) {
   async function exportPDF() {
     const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "letter" });
+    const fontBase64 = await loadDejaVuSansBase64();
+    doc.addFileToVFS("DejaVuSans.ttf", fontBase64);
+    doc.addFont("DejaVuSans.ttf", "DejaVuSans", "normal");
+    doc.setFont("DejaVuSans");
     const pageWidth = doc.internal.pageSize.getWidth();
 
     // Logo (550x85 original aspect ratio)
@@ -148,9 +153,9 @@ export default function ExportButton({ colleges, student, cardOptions }: Props) 
       head: [headers],
       body: rows.map((r) => r.map((cell) => cell.text)),
       theme: "grid",
-      headStyles: { fillColor: [56, 84, 123], fontSize: 7, cellPadding: 4 },
+      headStyles: { fillColor: [56, 84, 123], fontSize: 7, cellPadding: 4, font: "DejaVuSans", fontStyle: "normal" },
       bodyStyles: { fontSize: 7, cellPadding: 3 },
-      styles: { overflow: "linebreak", valign: "middle" },
+      styles: { overflow: "linebreak", valign: "middle", font: "DejaVuSans" },
       columnStyles: { 0: { cellWidth: 100 } },
       didParseCell(data) {
         if (data.section === "body") {
